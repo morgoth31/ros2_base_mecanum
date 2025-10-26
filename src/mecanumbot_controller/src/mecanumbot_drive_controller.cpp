@@ -57,7 +57,7 @@ controller_interface::CallbackReturn MecanumbotDriveController::on_init()
     return controller_interface::CallbackReturn::SUCCESS;
 }
 
-controller_interface::return_type MecanumbotDriveController::update(const rclcpp::Time & time, const rclcpp::Duration & period)
+controller_interface::return_type MecanumbotDriveController::update(const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
 {
     // Get the last velocity command
     auto velocity_command = velocity_command_ptr_.readFromRT();
