@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#define MECANUMBOT_SERIAL_BUFFER_MAX_SIZE           200
+#define MECANUMBOT_SERIAL_BUFFER_MAX_SIZE           256
 #define MECANUMBOT_SERIAL_SERIAL_FRAME_MAX_SIZE     100
 
 namespace debict

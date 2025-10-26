@@ -106,7 +106,7 @@ std::vector<hardware_interface::CommandInterface> MecanumbotHardware::export_com
     return command_interfaces;
 }
 
-hardware_interface::CallbackReturn MecanumbotHardware::on_activate(const rclcpp_lifecycle::State & previous_state)
+hardware_interface::CallbackReturn MecanumbotHardware::on_activate(const rclcpp_lifecycle::State & /*previous_state*/)
 {
     RCLCPP_INFO(rclcpp::get_logger("MecanumbotHardware"), "Mecanumbot hardware starting ...");
 
@@ -133,7 +133,7 @@ hardware_interface::CallbackReturn MecanumbotHardware::on_activate(const rclcpp_
     return hardware_interface::CallbackReturn::SUCCESS;
 }
 
-hardware_interface::CallbackReturn MecanumbotHardware::on_deactivate(const rclcpp_lifecycle::State & previous_state)
+hardware_interface::CallbackReturn MecanumbotHardware::on_deactivate(const rclcpp_lifecycle::State & /*previous_state*/)
 {
     RCLCPP_INFO(rclcpp::get_logger("MecanumbotHardware"), "Mecanumbot hardware stopping ...");
 
@@ -146,7 +146,7 @@ hardware_interface::CallbackReturn MecanumbotHardware::on_deactivate(const rclcp
     return hardware_interface::CallbackReturn::SUCCESS;
 }
 
-hardware_interface::return_type MecanumbotHardware::read(const rclcpp::Time & time, const rclcpp::Duration & period)
+hardware_interface::return_type MecanumbotHardware::read(const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
 {
     // Make sure we are connected to the serial port
     if (!serial_port_->is_open()) {
@@ -177,7 +177,7 @@ hardware_interface::return_type MecanumbotHardware::read(const rclcpp::Time & ti
     return hardware_interface::return_type::OK;
 }
 
-hardware_interface::return_type MecanumbotHardware::write(const rclcpp::Time & time, const rclcpp::Duration & period)
+hardware_interface::return_type MecanumbotHardware::write(const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
 {
     for (size_t i = 0; i < info_.joints.size(); i++) {
         // Only send motor commands if the velocity changed
