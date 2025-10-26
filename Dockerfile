@@ -12,6 +12,10 @@ ENV USER_NAME=ros
 # 4. Exécution des commandes en tant que root
 USER root
 
+RUN apt update
+RUN rosdep update
+RUN apt install -y ros-humble-joint-state-publisher-gui
+
 
 RUN groupadd -g ${USER_GID} ${USER_NAME} 2>/dev/null || groupadd ${USER_NAME} \
     \
@@ -30,4 +34,5 @@ RUN groupadd -g ${USER_GID} ${USER_NAME} 2>/dev/null || groupadd ${USER_NAME} \
     && chown -R ${USER_NAME}:${USER_NAME} /home/${USER_NAME}
 
 #  Bascule vers l'utilisateur créé pour les commandes suivantes
-# USER ${USER_NAME}
+USER ${USER_NAME}
+COPY .bashrc /home/${USER_NAME}/.bashrc
