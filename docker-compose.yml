@@ -2,7 +2,14 @@ version: '3.8'
 
 services:
   ros_humble_desktop:
-    image: osrf/ros:humble-desktop-full
+    build:
+      context: . 
+      dockerfile: Dockerfile
+      # Passer les arguments UID/GID de l'hôte au build
+      args:
+        USER_UID: "${UID}"
+        USER_GID: "${GID}"
+
     container_name: ros_humble_desktop
     privileged: true 
 
