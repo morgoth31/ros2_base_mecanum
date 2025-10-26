@@ -15,6 +15,7 @@ USER root
 RUN apt update
 RUN rosdep update
 RUN apt install -y ros-humble-joint-state-publisher-gui
+RUN apt install -y ros-humble-robot-localization
 
 
 RUN groupadd -g ${USER_GID} ${USER_NAME} 2>/dev/null || groupadd ${USER_NAME} \
