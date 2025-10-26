@@ -44,7 +44,18 @@ services:
     working_dir: /home/ros/ros2_ws
 
     command: tail -f /dev/null
-
+    
+    # --- Configuration GPU NVIDIA ---
+    deploy:
+      resources:
+        reservations:
+          devices:
+            # Type de périphérique : 'gpu'
+            - driver: nvidia
+              count: all      # Alloue tous les GPU disponibles. Utilisez '1' pour un seul GPU.
+              capabilities:   # Capacités nécessaires : 'gpu' et 'utility' pour les outils.
+                - gpu
+                - utility
 # --- [Optionnel] Volume nommé pour le cache ---
 # volumes:
 #   ros_cache:
