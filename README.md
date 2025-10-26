@@ -4,27 +4,24 @@ ROS2 Mecanum wheel robot
 ## Getting started
 
 #### Prerequisites
-This project is build and tested on Ubuntu 22.04 LTS with ROS 2 Humble LTS.  
-* [ROS install instructions](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html)
-* [Colcon install instructions](https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Colcon-Tutorial.html)
+This project is build and tested on Ubuntu 22.04 LTS with ROS 2 Humble LTS. But is mean to run in a docker 
 
 #### Setup workspace
+
 ```
-mkdir -p ~/workspaces/ros2-mecanum-bot/src
-cd ~/workspaces/ros2-mecanum-bot/src
-git clone https://github.com/deborggraever/ros2-mecanum-bot.git .
+./run_station.sh
 ```
+This function launch a docker container 
 
 #### Install dependencies
 ```
-cd ~/workspaces/ros2-mecanum-bot
+apt update
 rosdep update
 rosdep install --from-paths src --ignore-src --rosdistro humble -r -y
 ```
 
 #### Build and run
 ```
-cd ~/workspaces/ros2-mecanum-bot
 colcon build --symlink-install
 source install/setup.bash
 ros2 launch mecanumbot_bringup mecanumbot_hardware.py
