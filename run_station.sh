@@ -4,8 +4,6 @@ xhost +local:docker
 
 # Fichier: .env
 # Récupère automatiquement l'UID et le GID de l'utilisateur qui lance la commande
-UID=$(id -u)
-GID=$(id -g)
 
 docker container kill ros_humble_desktop
 

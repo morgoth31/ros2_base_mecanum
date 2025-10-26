@@ -9,20 +9,26 @@ This project is build and tested on Ubuntu 22.04 LTS with ROS 2 Humble LTS. But 
 #### Setup workspace
 
 ```
-./run_station.sh
+# first time need to build
+docker compose up --build -d
+
 ```
 This function launch a docker container 
 
+docker exec -it ros_humble_desktop bash
+
+
 #### Install dependencies
 ```
-apt update
+sudo apt update
 rosdep update
 rosdep install --from-paths src --ignore-src --rosdistro humble -r -y
-apt install ros-humble-joint-state-publisher-gui
+sudo apt install ros-humble-joint-state-publisher-gui
 ```
 
 #### Build and run
 ```
+source /opt/ros/humble/setup.sh
 colcon build --symlink-install
 source install/setup.bash
 ros2 launch mecanumbot_bringup mecanumbot_hardware.py
