@@ -18,6 +18,9 @@ services:
     # pour que les fichiers créés dans les volumes aient les bonnes permissions.
     user: "${UID}:${GID}"
 
+    group_add:
+      - video
+    
     network_mode: "host"
 
     environment:
@@ -39,6 +42,7 @@ services:
       # Monte le fichier d'autorisation X11 dans le nouveau HOME
       - ~/.Xauthority:/home/ros/.Xauthority:ro
 
+      - /dev/dri/renderD128:/dev/dri/renderD128  # Accès au GPU pour l'accélération graphique
       # --- Montage du projet ---
       # Monte le projet dans le nouveau HOME
       - .:/home/ros/ros2_ws:rw
@@ -46,6 +50,8 @@ services:
       # --- [Optionnel] Persistance du cache colcon/rosdep ---
       # Permet de garder le cache entre les recréations de conteneur
       # - ros_cache:/home/ros/.cache
+    devices:
+      - /dev/dri:/dev/dri  # Accès au GPU pour l'accélération graphique
 
     # Définit le répertoire de travail par défaut
     working_dir: /home/ros/ros2_ws
