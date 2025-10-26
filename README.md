@@ -18,6 +18,7 @@ This function launch a docker container
 apt update
 rosdep update
 rosdep install --from-paths src --ignore-src --rosdistro humble -r -y
+apt install ros-humble-joint-state-publisher-gui
 ```
 
 #### Build and run
@@ -30,7 +31,18 @@ ros2 launch mecanumbot_bringup mecanumbot_hardware.py
 #### Visualize the robot
 
 ```
-cd ~/workspaces/ros2-mecanum-bot
+docker exec -it ros_humble_desktop bash
+source /opt/ros/humble/setup.bash
 source install/setup.bash
 ros2 launch mecanumbot_bringup rviz2.py
+```
+
+
+## relaunch when already build
+
+
+```
+source /opt/ros/humble/setup.bash
+source /home/ros/ros2_ws/install/setup.bash
+ros2 launch mecanumbot_bringup mecanumbot_hardware.py
 ```
