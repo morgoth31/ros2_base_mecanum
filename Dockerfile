@@ -16,6 +16,10 @@ RUN apt update
 RUN rosdep update
 RUN apt install -y ros-humble-joint-state-publisher-gui
 RUN apt install -y ros-humble-robot-localization
+RUN apt install -y ros-humble-urdf-tutorial
+RUN apt install -y ros-humble-apriltag-ros
+RUN apt install -y ros-humble-controller-manager
+RUN apt install -y ros-humble-gz-ros2-control
 
 
 RUN groupadd -g ${USER_GID} ${USER_NAME} 2>/dev/null || groupadd ${USER_NAME} \

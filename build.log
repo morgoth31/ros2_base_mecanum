@@ -1,0 +1,2 @@
+time="2025-10-26T22:43:55Z" level=warning msg="The \"DISPLAY\" variable is not set. Defaulting to a blank string."
+time="2025-10-26T22:43:55Z" level=warning msg="/app/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
