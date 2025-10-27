@@ -1,5 +1,5 @@
 # 1. Base sur l'image ROS existante
-FROM osrf/ros:humble-desktop-full
+FROM osrf/ros:jazzy-desktop-full
 
 # 2. Définition des variables d'environnement par défaut
 # Ces valeurs par défaut seront écrasées par l'exécution du compose, mais sont utiles pour le build.
@@ -14,9 +14,12 @@ USER root
 
 RUN apt update
 RUN rosdep update
-RUN apt install -y ros-humble-joint-state-publisher-gui
-RUN apt install -y ros-humble-robot-localization
-
+RUN apt install -y ros-jazzy-joint-state-publisher-gui
+RUN apt install -y ros-jazzy-robot-localization
+RUN apt install -y ros-jazzy-urdf-tutorial
+RUN apt install -y ros-jazzy-apriltag-ros
+RUN apt install -y ros-jazzy-controller-manager
+RUN apt install -y ros-jazzy-gz-ros2-control
 
 RUN groupadd -g ${USER_GID} ${USER_NAME} 2>/dev/null || groupadd ${USER_NAME} \
     \

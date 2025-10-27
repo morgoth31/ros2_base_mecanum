@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  ros_humble_desktop:
+  ros_jazzy_desktop:
     build:
       context: . 
       dockerfile: Dockerfile
@@ -10,7 +10,7 @@ services:
         USER_UID: "${UID}"
         USER_GID: "${GID}"
 
-    container_name: ros_humble_desktop
+    container_name: ros_jazzy_desktop
     privileged: true 
 
     # --- Configuration Utilisateur (UID/GID) ---

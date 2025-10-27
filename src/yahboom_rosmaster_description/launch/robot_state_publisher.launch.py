@@ -44,7 +44,7 @@ def process_ros2_controllers_config(context):
     # Define both source and install paths
     src_config_path = os.path.join(
         home,
-        'ros2_ws/src/yahboom_rosmaster_description/config',
+        'ros2_ws/src/yahboom_rosmaster/yahboom_rosmaster_description/config',
         robot_name
     )
     install_config_path = os.path.join(
