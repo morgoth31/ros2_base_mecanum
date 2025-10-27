@@ -7,7 +7,7 @@ ARG USER_UID=1000
 ARG USER_GID=1000
 
 # 3. Définition du nom d'utilisateur standard dans le conteneur
-ENV USER_NAME=ros
+ENV USER_NAME=ubuntu
 
 # 4. Exécution des commandes en tant que root
 USER root
@@ -21,14 +21,10 @@ RUN apt install -y ros-jazzy-apriltag-ros
 RUN apt install -y ros-jazzy-controller-manager
 RUN apt install -y ros-jazzy-gz-ros2-control
 
-RUN groupadd -g ${USER_GID} ${USER_NAME} 2>/dev/null || groupadd ${USER_NAME} \
-    \
-    # Créer l'utilisateur avec l'UID de l'hôte et le groupe associé
-    && useradd -u ${USER_UID} -g ${USER_NAME} -m -s /bin/bash ${USER_NAME} \
-    \
-    # Ajouter l'utilisateur aux groupes nécessaires (sudo, video pour le GPU, etc.)
-    # Note : L'image de base doit avoir le paquet `sudo` installé.
-    && usermod -aG sudo,video ${USER_NAME} \
+#RUN groupmod -o -g ${USER_GID} ${USER_NAME} \
+#    && usermod -o -u ${USER_UID} -g ${USER_NAME} ${USER_NAME}
+
+RUN usermod -aG sudo,video ${USER_NAME} \
     \
     # **Règle Critique : Permettre l'exécution de sudo sans mot de passe (NOPASSWD)**
     # Crée un fichier de configuration pour sudoers.
