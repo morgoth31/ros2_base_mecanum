@@ -9,7 +9,7 @@ services:
     restart: always
     volumes:
       - ../src:/ros_ws/src
-      - ../docker/scripts/entrypoint.sh:/ros_ws/entrypoint.sh
+      - ./docker/robot_humble/scripts/entrypoint.sh:/ros_ws/entrypoint.sh
     entrypoint: /ros_ws/entrypoint.sh
     environment:
       - ROS_DOMAIN_ID=28
@@ -24,7 +24,7 @@ services:
     restart: always
     volumes:
       - ../src:/ros_ws/src
-      - ../docker/scripts/entrypoint.sh:/ros_ws/entrypoint.sh
+      - ./docker/robot_jazzy/scripts/entrypoint.sh:/ros_ws/entrypoint.sh
     entrypoint: /ros_ws/entrypoint.sh
     environment:
       - ROS_DOMAIN_ID=28

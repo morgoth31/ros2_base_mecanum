@@ -23,7 +23,7 @@ This repository contains the ROS 2 packages for a mecanum wheel robot, along wit
 
 ## Project Structure
 
-```
+```tree
 .
 ├── compose/                # Docker Compose files
 │   ├── simulation.yml
