@@ -7,11 +7,14 @@ services:
       dockerfile: docker/robot_humble/Dockerfile
     network_mode: host
     restart: always
+    volumes:
+      - ../src:/ros_ws/src
+      - ../docker/scripts/entrypoint.sh:/ros_ws/entrypoint.sh
+    entrypoint: /ros_ws/entrypoint.sh
     environment:
       - ROS_DOMAIN_ID=28
     command: >
-      bash -c "source /ros_ws/install/setup.bash &&
-               ros2 launch yahboom_rosmaster_bringup rosmaster_x3_navigation.launch.py"
+      ros2 launch yahboom_rosmaster_bringup rosmaster_x3_navigation.launch.py
 
   localization_jazzy:
     build:
@@ -19,8 +22,11 @@ services:
       dockerfile: docker/robot_jazzy/Dockerfile
     network_mode: host
     restart: always
+    volumes:
+      - ../src:/ros_ws/src
+      - ../docker/scripts/entrypoint.sh:/ros_ws/entrypoint.sh
+    entrypoint: /ros_ws/entrypoint.sh
     environment:
       - ROS_DOMAIN_ID=28
     command: >
-      bash -c "source /ros_ws/install/setup.bash &&
-               ros2 launch yahboom_rosmaster_localization rosmaster_localization.launch.py"
+      ros2 launch yahboom_rosmaster_localization rosmaster_localization.launch.py

@@ -6,12 +6,14 @@ services:
       context: ..
       dockerfile: docker/station/Dockerfile
     network_mode: host
+    volumes:
+      - ../src:/ros_ws/src
+      - ../docker/scripts/entrypoint.sh:/ros_ws/entrypoint.sh
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    entrypoint: /ros_ws/entrypoint.sh
     environment:
       - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
       - ROS_DOMAIN_ID=28
-    volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix
     command: >
-      bash -c "source /ros_ws/install/setup.bash &&
-               rviz2"
+      rviz2

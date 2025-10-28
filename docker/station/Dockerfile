@@ -11,16 +11,16 @@ RUN apt-get update && apt-get install -y \
     ros-jazzy-rqt* \
     terminator \
     python3-scipy \
+    python3-colcon-common-extensions \
+    python3-rosdep \
     && rm -rf /var/lib/apt/lists/*
-
-# Copy and compile the src workspace (for custom messages)
-WORKDIR /ros_ws
-COPY src /ros_ws/src
-RUN . /opt/ros/jazzy/setup.sh && colcon build --symlink-install
 
 # GPU Support (commented out for testing in environments without a GPU)
 # ENV NVIDIA_VISIBLE_DEVICES all
 # ENV NVIDIA_DRIVER_CAPABILITIES graphics,utility,compute
 
-# Configure the CMD or ENTRYPOINT to automatically source /ros_ws/install/setup.bash
-CMD ["/bin/bash", "-c", "source /ros_ws/install/setup.bash && /bin/bash"]
+# Create a ROS 2 workspace
+WORKDIR /ros_ws
+
+# Default command to keep the container running
+CMD ["bash"]
