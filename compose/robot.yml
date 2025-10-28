@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  # Nœud de navigation utilisant Humble
+  navigation_humble:
+    build:
+      context: ../
+      dockerfile: docker/robot_humble/Dockerfile
+    command: ros2 launch bringup navigation.launch.py
+    network_mode: host # Essentiel sur le robot pour la performance et la découverte
+    environment:
+      - ROS_DOMAIN_ID=42 # ID de domaine partagé
+      # - CYCLONEDDS_URI=file:///path/to/cyclone_dds.xml # Si DDS est utilisé
+    # volumes: # Si DDS est utilisé
+    #   - ../docker/common/cyclone_dds.xml:/path/to/cyclone_dds.xml
+
+  # Nœud de localisation utilisant Jazzy (ex: un nouveau driver de capteur)
+  localization_jazzy:
+    build:
+      context: ../
+      dockerfile: docker/robot_jazzy/Dockerfile
+    command: ros2 launch localization localization.launch.py
+    network_mode: host
+    environment:
+      - ROS_DOMAIN_ID=42
+    # ...

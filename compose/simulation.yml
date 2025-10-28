@@ -1,0 +1,46 @@
+version: '3.8'
+services:
+  # 1. Le simulateur Gazebo
+  gazebo:
+    image: gz-garden:latest # Ou l'image Gazebo que vous préférez
+    command: gz sim -r /worlds/mon_monde.sdf
+    network_mode: host # Tous les services partagent le même "localhost"
+    volumes:
+      - ../worlds:/worlds # Monte les fichiers de monde
+
+  # 2. Les nœuds du robot (version Humble)
+  robot_nodes_humble:
+    build:
+      context: ../
+      dockerfile: docker/robot_humble/Dockerfile
+    command: ros2 launch bringup navigation.launch.py use_sim_time:=true
+    network_mode: host
+    environment:
+      - ROS_DOMAIN_ID=42
+      - GZ_PARTITION=default # Pour la communication ROS-Gazebo
+
+  # 3. Les nœuds du robot (version Jazzy)
+  robot_nodes_jazzy:
+    build:
+      context: ../
+      dockerfile: docker/robot_jazzy/Dockerfile
+    command: ros2 launch localization localization.launch.py use_sim_time:=true
+    network_mode: host
+    environment:
+      - ROS_DOMAIN_ID=42
+      - GZ_PARTITION=default
+
+  # 4. Les outils de la station
+  station_tools:
+    build:
+      context: ../
+      dockerfile: docker/station/Dockerfile
+    command: rviz2 -d /ros_ws/src/bringup/config/default.rviz
+    network_mode: host
+    privileged: true
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      - ROS_DOMAIN_ID=42
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
