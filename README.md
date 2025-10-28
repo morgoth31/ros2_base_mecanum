@@ -7,12 +7,11 @@ This repository contains the ROS 2 packages for a mecanum wheel robot, along wit
 - [Prerequisites](#prerequisites)
 - [Project Structure](#project-structure)
 - [Getting Started](#getting-started)
-  - [Building the Docker Images](#building-the-docker-images)
 - [Usage](#usage)
   - [Simulation Environment](#simulation-environment)
   - [Robot Deployment](#robot-deployment)
   - [Station (Monitoring)](#station-monitoring)
-- [Testing](#testing)
+- [Development Workflow](#development-workflow)
 
 ## Prerequisites
 
@@ -28,13 +27,15 @@ This repository contains the ROS 2 packages for a mecanum wheel robot, along wit
 │   ├── simulation.yml
 │   ├── robot.yml
 │   └── station.yml
-├── docker/                 # Dockerfiles
+├── docker/                 # Dockerfiles and scripts
 │   ├── robot_humble/
 │   │   └── Dockerfile
 │   ├── robot_jazzy/
 │   │   └── Dockerfile
-│   └── station/
-│       └── Dockerfile
+│   ├── station/
+│   │   └── Dockerfile
+│   └── scripts/
+│       └── entrypoint.sh
 ├── src/                    # ROS 2 source code
 ├── worlds/                 # Gazebo worlds
 └── README.md
@@ -42,28 +43,9 @@ This repository contains the ROS 2 packages for a mecanum wheel robot, along wit
 
 ## Getting Started
 
-### Building the Docker Images
+When you first launch one of the environments, Docker Compose will build the necessary images. The initial build may take some time as it downloads the base ROS images and installs dependencies.
 
-You can build all the images at once or individually.
-
-**Build all images:**
-
-```bash
-sudo docker compose -f compose/simulation.yml build
-```
-
-**Build a specific image:**
-
-```bash
-# Build the Humble robot image
-sudo docker build -t robot_humble -f docker/robot_humble/Dockerfile .
-
-# Build the Jazzy robot image
-sudo docker build -t robot_jazzy -f docker/robot_jazzy/Dockerfile .
-
-# Build the station image
-sudo docker build -t station -f docker/station/Dockerfile .
-```
+Subsequent launches will be much faster. The ROS 2 workspace is built automatically every time a container starts.
 
 ## Usage
 
@@ -120,18 +102,10 @@ sudo docker compose -f compose/station.yml up --build
 - After launching `robot.yml` on the robot and `station.yml` on the station (on the same network and with the same `ROS_DOMAIN_ID`), RViz should open.
 - If you add a display for a topic like `/odom`, you should see the data being published by the robot.
 
-## Testing
+## Development Workflow
 
-Each Dockerfile builds the ROS 2 workspace and runs tests. You can also run the tests manually inside a running container.
+The `src` directory is mounted into the containers, so you can edit the code on your host machine and the changes will be reflected inside the containers. To rebuild the workspace after making changes, simply restart the containers.
 
 ```bash
-# Get the ID of the container
-sudo docker ps
-
-# Exec into the container
-sudo docker exec -it <container_id> bash
-
-# Run tests
-source /ros_ws/install/setup.bash
-colcon test
+sudo docker compose -f compose/simulation.yml restart
 ```
