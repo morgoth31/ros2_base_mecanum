@@ -23,7 +23,6 @@ docker exec -it ros_humble_desktop bash
 sudo apt update
 rosdep update
 rosdep install --from-paths src --ignore-src --rosdistro humble -r -y
-sudo apt install ros-humble-joint-state-publisher-gui
 ```
 
 #### Build and run
