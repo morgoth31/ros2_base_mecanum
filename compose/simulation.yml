@@ -1,46 +1,42 @@
 version: '3.8'
-services:
-  # 1. Le simulateur Gazebo
-  gazebo:
-    image: gz-garden:latest # Ou l'image Gazebo que vous préférez
-    command: gz sim -r /worlds/mon_monde.sdf
-    network_mode: host # Tous les services partagent le même "localhost"
-    volumes:
-      - ../worlds:/worlds # Monte les fichiers de monde
 
-  # 2. Les nœuds du robot (version Humble)
+services:
+  gazebo:
+    image: gzserver:lts
+    network_mode: host
+    volumes:
+      - ../worlds:/worlds
+
   robot_nodes_humble:
     build:
-      context: ../
+      context: ..
       dockerfile: docker/robot_humble/Dockerfile
-    command: ros2 launch bringup navigation.launch.py use_sim_time:=true
     network_mode: host
     environment:
-      - ROS_DOMAIN_ID=42
-      - GZ_PARTITION=default # Pour la communication ROS-Gazebo
+      - ROS_DOMAIN_ID=28
+    command: >
+      bash -c "source /ros_ws/install/setup.bash &&
+               ros2 launch yahboom_rosmaster_bringup yahboom_rosmaster_simulation.launch.py use_sim_time:=true"
 
-  # 3. Les nœuds du robot (version Jazzy)
   robot_nodes_jazzy:
     build:
-      context: ../
+      context: ..
       dockerfile: docker/robot_jazzy/Dockerfile
-    command: ros2 launch localization localization.launch.py use_sim_time:=true
     network_mode: host
     environment:
-      - ROS_DOMAIN_ID=42
-      - GZ_PARTITION=default
+      - ROS_DOMAIN_ID=28
+    command: >
+      bash -c "source /ros_ws/install/setup.bash &&
+               ros2 launch yahboom_rosmaster_bringup yahboom_rosmaster_simulation.launch.py use_sim_time:=true"
 
-  # 4. Les outils de la station
   station_tools:
     build:
-      context: ../
+      context: ..
       dockerfile: docker/station/Dockerfile
-    command: rviz2 -d /ros_ws/src/bringup/config/default.rviz
     network_mode: host
-    privileged: true
     environment:
       - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
-      - ROS_DOMAIN_ID=42
+      - ROS_DOMAIN_ID=28
     volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - /tmp/.X11-unix:/tmp/.X11-unix
