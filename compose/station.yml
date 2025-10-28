@@ -5,15 +5,68 @@ services:
     build:
       context: ..
       dockerfile: docker/station/Dockerfile
+      # Passer les arguments UID/GID de l'hôte au build
+#      args:
+        # Si $USER_UID n'existe pas sur l'hôte, il sera passé comme une chaîne vide.
+#        USER_UID: ${USER_UID} 
+#        USER_GID: ${USER_GID}
+    container_name: ros_station
+    privileged: true   
+    
+    #user: "${UID}:${GID}"
+
     network_mode: host
     volumes:
-      - ../src:/ros_ws/src
+      # --- Montage du projet ---
+      # Monte le projet dans le nouveau HOME
+      - ../src:/ros_ws/src:rw
       - ../docker/scripts/entrypoint.sh:/ros_ws/entrypoint.sh
-      - /tmp/.X11-unix:/tmp/.X11-unix
-    entrypoint: /ros_ws/entrypoint.sh
+
+      # --- Montage X11 (pour RViz2) ---
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      # Monte le fichier d'autorisation X11 dans le nouveau HOME
+      - ~/.Xauthority:/home/ros/.Xauthority:ro
+
+      - /dev/dri/renderD128:/dev/dri/renderD128  # Accès au GPU pour l'accélération graphique
+
+      # --- [Optionnel] Persistance du cache colcon/rosdep ---
+      # Permet de garder le cache entre les recréations de conteneur
+      # - ros_cache:/home/ros/.cache
+
+
     environment:
+      # --- Configuration X11 (pour RViz2) ---
       - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
+
+      # --- Définition du HOME pour l'utilisateur UID/GID ---
+      # Nous définissons un répertoire HOME pour que .Xauthority soit trouvé
+      - HOME=/home/ros
+
+      # --- Configuration ROS 2 (Exemples) ---
       - ROS_DOMAIN_ID=28
-    command: >
-      rviz2
+      # - ROS_DISCOVERY_SERVER=192.168.1.100:11811
+    devices:
+      - /dev/dri:/dev/dri  # Accès au GPU pour l'accélération graphique
+    # Définit le répertoire de travail par défaut
+    working_dir: /home/ros/ros2_ws
+
+    #entrypoint: /ros_ws/entrypoint.sh
+    # command: >
+    #   rviz2
+    # --- Configuration GPU NVIDIA ---
+    command: tail -f /dev/null
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            # Type de périphérique : 'gpu'
+            - driver: nvidia
+              count: all      # Alloue tous les GPU disponibles. Utilisez '1' pour un seul GPU.
+              capabilities:   # Capacités nécessaires : 'gpu' et 'utility' pour les outils.
+                - gpu
+                - utility
+# --- [Optionnel] Volume nommé pour le cache ---
+# volumes:
+#   ros_cache:

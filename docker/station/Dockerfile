@@ -1,24 +1,50 @@
-# Use ros:jazzy-desktop as the base image
-FROM ros:jazzy-desktop
+# 1. Base sur l'image ROS existante
+FROM osrf/ros:humble-desktop-full
 
-# Set the environment
-ENV LANG C.UTF-8
-ENV LC_ALL C.UTF-8
-ENV DEBIAN_FRONTEND=noninteractive
+# 2. Définition des variables d'environnement par défaut
+# Ces valeurs par défaut seront écrasées par l'exécution du compose, mais sont utiles pour le build.
+ARG USER_UID=1000
+ARG USER_GID=1000
+
+# 3. Définition du nom d'utilisateur standard dans le conteneur
+ENV USER_NAME=ros
+
+# 4. Exécution des commandes en tant que root
+USER root
 
 # Install additional tools
-RUN apt-get update && apt-get install -y \
-    ros-jazzy-rqt* \
-    terminator \
-    python3-scipy \
-    python3-colcon-common-extensions \
-    python3-rosdep \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt update
+RUN apt install -y ros-humble-joint-state-publisher-gui
+RUN apt install -y ros-humble-robot-localization
+RUN apt install -y ros-humble-ros2-control ros-humble-ros2-controllers ros-humble-gazebo-ros2-control
+RUN apt install -y ros-humble-joint-state-publisher-gui
+RUN apt install -y ros-humble-robot-localization
+RUN apt install -y ros-humble-urdf-tutorial
+RUN apt install -y ros-humble-apriltag-ros
+RUN apt install -y ros-humble-controller-manager
+RUN apt install -y ros-humble-gz-ros2-control
 
-# GPU Support (commented out for testing in environments without a GPU)
-# ENV NVIDIA_VISIBLE_DEVICES all
-# ENV NVIDIA_DRIVER_CAPABILITIES graphics,utility,compute
 
+RUN groupadd -g ${USER_GID} ${USER_NAME} 2>/dev/null || groupadd ${USER_NAME}
+    
+    # Créer l'utilisateur avec l'UID de l'hôte et le groupe associé
+RUN useradd -u ${USER_UID} -g ${USER_NAME} -m -s /bin/bash ${USER_NAME} 
+    
+    # Ajouter l'utilisateur aux groupes nécessaires (sudo, video pour le GPU, etc.)
+    # Note : L'image de base doit avoir le paquet `sudo` installé.
+RUN usermod -aG sudo,video ${USER_NAME} 
+    
+    # **Règle Critique : Permettre l'exécution de sudo sans mot de passe (NOPASSWD)**
+    # Crée un fichier de configuration pour sudoers.
+RUN echo "${USER_NAME} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/99-${USER_NAME}-nopasswd 
+    
+    #  S'assurer que le répertoire home est correctement possédé (pour les fichiers de config)
+RUN chown -R ${USER_NAME}:${USER_NAME} /home/${USER_NAME}
+
+#  Bascule vers l'utilisateur créé pour les commandes suivantes
+USER ${USER_NAME}
+RUN rosdep update
+COPY .bashrc /home/${USER_NAME}/.bashrc
 # Create a ROS 2 workspace
 WORKDIR /ros_ws
 

@@ -4,14 +4,16 @@ This repository contains the ROS 2 packages for a mecanum wheel robot, along wit
 
 ## Table of Contents
 
-- [Prerequisites](#prerequisites)
-- [Project Structure](#project-structure)
-- [Getting Started](#getting-started)
-- [Usage](#usage)
-  - [Simulation Environment](#simulation-environment)
-  - [Robot Deployment](#robot-deployment)
-  - [Station (Monitoring)](#station-monitoring)
-- [Development Workflow](#development-workflow)
+- [ROS 2 Mecanum Bot](#ros-2-mecanum-bot)
+  - [Table of Contents](#table-of-contents)
+  - [Prerequisites](#prerequisites)
+  - [Project Structure](#project-structure)
+  - [Getting Started](#getting-started)
+  - [Usage](#usage)
+    - [Simulation Environment](#simulation-environment)
+    - [Robot Deployment](#robot-deployment)
+    - [Station (Monitoring)](#station-monitoring)
+  - [Development Workflow](#development-workflow)
 
 ## Prerequisites
 
@@ -56,16 +58,20 @@ The simulation environment launches Gazebo, the robot nodes (both Humble and Jaz
 **Launch the simulation:**
 
 ```bash
-sudo docker compose -f compose/simulation.yml up --build
+#docker compose -f compose/simulation.yml up --build
+docker build -t robot_jazzy -f docker/robot_jazzy/Dockerfile .
+docker build -t robot_humble -f docker/robot_humble/Dockerfile .
 ```
 
 **Verification:**
 
 - All services (gazebo, robot_nodes_humble, robot_nodes_jazzy, station_tools) should start without errors.
 - To verify communication, open a new terminal and list the ROS 2 topics:
-  ```bash
+
+```bash
   ros2 topic list
-  ```
+```
+
   You should see topics from Gazebo and the robot nodes.
 
 ### Robot Deployment

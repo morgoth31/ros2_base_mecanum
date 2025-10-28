@@ -4,6 +4,10 @@
 # Make sure you have Docker and Docker Compose installed
 # Run this script from the root directory of the project
 
-docker compose -f compose/robot.yml build
-docker compose -f compose/station.yml build
-docker compose -f compose/simulation.yml build
+docker build -t robot_jazzy -f docker/robot_jazzy/Dockerfile .
+docker build -t robot_humble -f docker/robot_humble/Dockerfile .
+docker build -t robot_humble -f docker/robot_humble/Dockerfile .
+
+#docker compose -f compose/robot.yml up -d
+#docker compose -f compose/station.yml up
+#docker compose -f compose/simulation.yml
