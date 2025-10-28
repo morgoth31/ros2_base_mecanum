@@ -1,17 +1,17 @@
 version: '3.8'
+
 services:
-  # Outil de visualisation
-  rviz_station:
+  station_tools:
     build:
-      context: ../
+      context: ..
       dockerfile: docker/station/Dockerfile
-    command: rviz2 -d /ros_ws/src/bringup/config/default.rviz
-    network_mode: host # Nécessaire pour découvrir les topics du robot sur le LAN
-    privileged: true # Souvent requis pour l'accès au matériel graphique
+    network_mode: host
     environment:
       - DISPLAY=${DISPLAY}
       - QT_X11_NO_MITSHM=1
-      - ROS_DOMAIN_ID=42 # Doit correspondre à celui du robot
+      - ROS_DOMAIN_ID=28
     volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix:rw # Partage du socket X11 pour la GUI
-      # - ../docker/common/cyclone_dds.xml:/path/to/cyclone_dds.xml
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    command: >
+      bash -c "source /ros_ws/install/setup.bash &&
+               rviz2"
