@@ -9,12 +9,12 @@ services:
     restart: always
     volumes:
       - ../src:/ros_ws/src
-      - ./docker/robot_humble/scripts/entrypoint.sh:/ros_ws/entrypoint.sh
-    entrypoint: /ros_ws/entrypoint.sh
+    #entrypoint: /home/ros/entrypoint.sh
     environment:
       - ROS_DOMAIN_ID=28
     command: >
-      ros2 launch yahboom_rosmaster_bringup rosmaster_x3_navigation.launch.py
+      bash /ros_ws/src/scripts/run_navigation.sh
+      
 
   localization_jazzy:
     build:
@@ -24,9 +24,10 @@ services:
     restart: always
     volumes:
       - ../src:/ros_ws/src
-      - ./docker/robot_jazzy/scripts/entrypoint.sh:/ros_ws/entrypoint.sh
-    entrypoint: /ros_ws/entrypoint.sh
+      #- ./docker/scripts/:/ros_ws/
+    #entrypoint: /home/ros/entrypoint.sh
     environment:
       - ROS_DOMAIN_ID=28
     command: >
-      ros2 launch yahboom_rosmaster_localization rosmaster_localization.launch.py
+     bash /ros_ws/src/scripts/run_localisation.sh
+      

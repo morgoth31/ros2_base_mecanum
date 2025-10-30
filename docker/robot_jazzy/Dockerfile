@@ -18,5 +18,6 @@ RUN apt-get update && apt-get install -y \
 # Create a ROS 2 workspace
 WORKDIR /ros_ws
 
+
 # Default command to keep the container running
 CMD ["bash"]
