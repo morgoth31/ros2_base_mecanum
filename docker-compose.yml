@@ -46,6 +46,7 @@ services:
       # --- Montage du projet ---
       # Monte le projet dans le nouveau HOME
       - .:/home/ros/ros2_ws:rw
+      - .rviz2:/home/ros/.rviz2:rw
       
       # --- [Optionnel] Persistance du cache colcon/rosdep ---
       # Permet de garder le cache entre les recréations de conteneur
