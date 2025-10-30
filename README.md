@@ -127,3 +127,43 @@ Voici quelques commandes `ros2` utiles pour inspecter l'état du système :
     ```bash
     ros2 run tf2_ros tf2_echo odom base_link
     ```
+
+## Identification des Nœuds
+
+Ce projet est composé de nombreux nœuds ROS2. Voici une classification de leur rôle.
+
+### 1. Nœuds du Robot (Nœuds Principaux)
+
+Ces nœuds sont essentiels au fonctionnement du robot, que ce soit pour le contrôle de bas niveau, la localisation, ou les comportements autonomes.
+
+-   **Pilotes Matériels (`yahboomcar_bringup`)**: `Ackman_driver_R2`, `Mcnamu_driver_X3` - Interface directe avec le matériel pour lire les capteurs et commander les moteurs.
+-   **Odométrie (`yahboomcar_base_node`)**: `base_node_R2`, `base_node_X3` - Calcule la position du robot à partir des données des roues.
+-   **Contrôle Manuel (`yahboomcar_ctrl`)**: `yahboom_joy_*`, `yahboom_keyboard` - Permet de piloter le robot avec un joystick ou un clavier.
+-   **Navigation Autonome (`yahboomcar_nav`)**: Nœuds de la pile Nav2 (`amcl`, `planner_server`, `controller_server`) pour la localisation et la planification de trajectoire.
+-   **SLAM (`yahboomcar_nav`, `yahboomcar_slam`)**: `slam_toolbox`, `gmapping`, `cartographer`, `orbslam_rgbd_pose` - Pour la cartographie de l'environnement.
+-   **Comportements Autonomes**:
+    -   `yahboomcar_laser`: `laser_Avoidance_*`, `laser_Tracker_*` - Évitement d'obstacles et suivi par Lidar.
+    -   `yahboomcar_linefollow`: `follow_line_*` - Suivi de ligne par caméra.
+    -   `yahboomcar_astra`: `colorTracker` - Suivi d'objet par couleur.
+-   **Contrôle Vocal (`yahboomcar_voice_ctrl`)**: `Voice_Ctrl_*` - Ajoute une couche de commande vocale aux fonctionnalités existantes.
+-   **Traitement de Capteurs**:
+    -   `imu_filter_madgwick`: `imu_filter_madgwick_node` - Filtre et améliore les données de l'IMU.
+    -   `robot_localization`: `ekf_node` - Fusionne les données d'odométrie et d'IMU pour une estimation de pose plus précise.
+
+### 2. Nœuds de Supervision (Monitoring)
+
+Ces nœuds sont utilisés pour la visualisation, le débogage et la conversion de données. Ils ne sont généralement pas critiques pour le fonctionnement du robot mais sont essentiels pour le développement.
+
+-   **Visualisation du Modèle**: `robot_state_publisher`, `joint_state_publisher` - Publie la structure et l'état du robot pour la visualisation dans RViz2.
+-   **Interface de Visualisation 3D**: `rviz2` - L'outil principal pour visualiser l'état du robot et les données des capteurs.
+-   **Conversion de Données pour la Visualisation**:
+    -   `laserscan_to_point_pulisher`: Convertit les données Lidar (`LaserScan`) en un nuage de points (`Path`) plus facile à visualiser.
+    -   `robot_pose_publisher_ros2`: Convertit la transformation TF du robot en un message de `Pose` qui peut être facilement tracé.
+    -   `yahboomcar_point`: Convertit les points détectés par MediaPipe en un nuage de points (`PointCloud2`) pour RViz2.
+    -   `yahboomcar_visual`: `laser_to_image` - Crée une image en vue de dessus à partir des données Lidar.
+
+### 3. Nœuds de Simulation
+
+Ce projet n'utilise pas de nœuds spécifiques à la simulation (comme des plugins Gazebo dédiés). La stratégie adoptée est d'utiliser les mêmes nœuds que pour le robot réel en activant le mode de simulation de ROS2.
+
+-   **Utilisation du temps de simulation**: En lançant les nœuds du robot avec le paramètre `use_sim_time:=true`, les nœuds ignorent l'horloge système et utilisent l'horloge publiée par le simulateur (par exemple, Gazebo). Cela permet à la grande majorité des nœuds (localisation, navigation, contrôle) de fonctionner de manière identique en simulation et dans le monde réel.
